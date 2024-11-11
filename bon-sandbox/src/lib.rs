@@ -4,6 +4,7 @@
 //! Don't use this crate, it doesn't follow semver at all and serves no other purpose
 //! other than linking to its docs as an example!
 #![allow(missing_debug_implementations, missing_docs, dead_code)]
+#![feature(associated_type_defaults)]
 
 pub mod attr_default;
 pub mod attr_with;

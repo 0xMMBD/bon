@@ -1,3 +1,4 @@
+#![feature(associated_type_defaults)]
 #![allow(
     missing_docs,
     missing_debug_implementations,

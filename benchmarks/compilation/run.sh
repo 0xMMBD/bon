@@ -14,11 +14,11 @@ suites=(
 )
 
 hyperfine \
-    --setup 'cargo build -p compilation-benchmarks --features={suite},{macro}' \
-    --prepare 'cargo clean -p compilation-benchmarks' \
+    --setup 'cargo +nightly build -p compilation-benchmarks --features={suite},{macro}' \
+    --prepare 'cargo +nightly clean -p compilation-benchmarks' \
     --shell=none \
     --export-markdown results.md \
     --parameter-list macro "$(IFS=, ; echo "${macros[*]}")," \
     --parameter-list suite "$(IFS=, ; echo "${suites[*]}")" \
     --command-name '{suite} {macro}' \
-    'cargo build -p compilation-benchmarks --features={suite},{macro}'
+    'cargo +nightly build -p compilation-benchmarks --features={suite},{macro}'

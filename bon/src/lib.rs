@@ -1,3 +1,4 @@
+#![feature(associated_type_defaults)]
 #![doc(
     html_logo_url = "https://bon-rs.com/bon-logo-thumb.png",
     html_favicon_url = "https://bon-rs.com/bon-logo-medium.png"

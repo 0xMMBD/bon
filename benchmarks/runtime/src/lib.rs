@@ -1,3 +1,4 @@
+#![feature(associated_type_defaults)]
 #![allow(
     unsafe_code,
     dead_code,

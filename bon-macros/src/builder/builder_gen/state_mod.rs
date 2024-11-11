@@ -115,29 +115,34 @@ impl<'a> StateModGenCtx<'a> {
                 );
             });
 
-            let states = self.base.stateful_members().map(|other_member| {
-                if other_member.is(member) {
-                    let member_snake = &member.name.snake;
-                    quote! {
-                        Set<members::#member_snake>
-                    }
-                } else {
-                    let member_pascal = &other_member.name.pascal;
-                    quote! {
-                        S::#member_pascal
-                    }
-                }
-            });
+            // let states = self.base.stateful_members().map(|other_member| {
+            //     if other_member.is(member) {
+            //         let member_snake = &member.name.snake;
+            //         quote! {
+            //             Set<members::#member_snake>
+            //         }
+            //     } else {
+            //         let member_pascal = &other_member.name.pascal;
+            //         quote! {
+            //             S::#member_pascal
+            //         }
+            //     }
+            // });
 
-            let stateful_members_pascal = &self.stateful_members_pascal;
+            // let stateful_members_pascal = &self.stateful_members_pascal;
+            let member_pascal = &member.name.pascal;
+            let member_snake = &member.name.snake;
 
             state_impls.push(quote! {
                 #[doc(hidden)]
-                impl<S: State> State for #struct_ident<S> {
-                    #(
-                        type #stateful_members_pascal = #states;
-                    )*
-                    #sealed_item_impl
+                impl<S: State> StateTransition for #struct_ident<S> {
+                    // #(
+                    //     type #stateful_members_pascal = #states;
+                    // )*
+                    type Prev = S;
+                    type #member_pascal = Set<members::#member_snake>;
+
+                    // #sealed_item_impl
                 }
             });
         }
@@ -177,6 +182,7 @@ impl<'a> StateModGenCtx<'a> {
 
         let vis_child = &self.base.state_mod.vis_child;
         let sealed_item_decl = &self.sealed_item_decl;
+        let sealed_item_impl = &self.sealed_item_impl;
         let stateful_members_pascal = &self.stateful_members_pascal;
 
         let docs_suffix = if stateful_members_pascal.is_empty() {
@@ -200,6 +206,19 @@ impl<'a> StateModGenCtx<'a> {
                     type #stateful_members_pascal;
                 )*
                 #sealed_item_decl
+            }
+
+            #vis_child trait StateTransition {
+                type Prev: State;
+
+                #( type #stateful_members_pascal = <Self::Prev as State>::#stateful_members_pascal; )*
+            }
+
+            impl<T: StateTransition> State for T {
+                #(
+                    type #stateful_members_pascal = <Self as StateTransition>::#stateful_members_pascal;
+                )*
+                #sealed_item_impl
             }
         }
     }
