@@ -7,6 +7,10 @@ abbr {
     cursor: help;
 }
 
+img {
+    border-radius: 15px;
+}
+
 /*
 God bless this kind person for sharing the code snippet that adds the
 ability to zoom images.
